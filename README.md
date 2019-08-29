@@ -14,30 +14,33 @@ dim(counties)
 
 
 #The Data
+
+
 opiod_deaths<- read_csv("Opiod_Death_NYS_2016.csv")
+
+
 head(opiod_deaths)
 
-# We dont know need to import the County data manually, that is included in the urbnmapr package
+## We dont know need to import the County data manually, that is included in the urbnmapr package
 
 #We need to give the columns that contain the county names in outer
 # 2 data sets identical names so that we can merge on them
 
-#
-#rename(new variable name = existing variable name)
+## rename(new variable name = existing variable name)
 opiod_deaths<- opiod_deaths%>% rename(county = Place)
 head(opiod_deaths)
 
 
-#Replace NA with 0
-#data[is.na(data)] <- 0
+## Replace NA with 0
+## data[is.na(data)] <- 0
 opiod_deaths[is.na(opiod_deaths)]<- 0
 
-# Convert ot all lowercase
+## Convert ot all lowercase
 opiod_deaths$county<- tolower(opiod_deaths$county)
 counties$county <- tolower(counties$county)
 
 
-#Extract NYS from the couties data
+## Extract NYS from the couties data
 NewYork<- filter(counties, state_name=="New York")
 
 merged_opiod_data<- opiod_deaths%>%
@@ -55,18 +58,17 @@ merged_opiod_data%>%
         legend.key.width = unit(.5, "in")) +
   labs(fill = "Mortality")  
 
-#But actually we are interested only in the 5 boroughs 
+## But actually we are interested only in the 5 boroughs 
 
 boroughs<- c("bronx", "new york", "kings","queens","richmond")
 
 five_boros<- filter(merged_opiod_data, county %in% c(boroughs))
+
 View(five_boros)
 
-Manhattan<- filter(merged_opiod_data,county == "kings")
-head(Manhattan)
-Manhattan<- filter(merged_opiod_data,county == "kings")
 
-# now we will map just the NYC data
+
+## Now we will map just the NYC data
 five_boros%>%
   ggplot(mapping = aes(long, lat, group = group, fill = rate_per_100k)) +
   geom_polygon(color = "#ffffff", size = 1) +
@@ -78,7 +80,7 @@ five_boros%>%
 ###########
 
 
-# now we will map just the NYC data
+## now we will map just the NYC data
 five_boros%>%
   ggplot(mapping = aes(long, lat, group = group, fill = rate_per_100k)) +
 
@@ -89,7 +91,7 @@ five_boros%>%
         legend.key.width = unit(.5, "in")) +
   labs(fill = "Number Per 100k") 
 ###
-# now we will map just the NYC data
+## Now we will map just the NYC data
 five_boros%>%
   ggplot(mapping = aes(long, lat, group = group, fill = rate_per_100k)) +
   geom_polygon( color = "black", size = 1) +
@@ -101,7 +103,3 @@ five_boros%>%
   ggtitle("Opiod Deaths" )+
   theme_void()
 
-
-
-####### Scrap
-str(five_boros)
